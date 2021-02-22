@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html amp lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>⚡ Calculator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="canonical" href="https://amprequires.this">
+
+
+    <!-- AMP and custom AMP elements -->
+    <script async src="https://cdn.ampproject.org/v0.js"></script>
+    <script async custom-element="amp-bind" src="https://cdn.ampproject.org/v0/amp-bind-0.1.js"></script>
+    <script
+      async
+      custom-element="amp-selector"
+      src="https://cdn.ampproject.org/v0/amp-selector-0.1.js"
+    ></script>
+
+
+    <!-- AMP Boilerplate CSS -->
+    <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+
+    <!-- Custom CSS -->
+    <style amp-custom>
+      .yt-revenue-calculator{width:100%;max-width:980px;margin:0 auto;padding:2rem;background-color:#e7e8d3;border-radius:.5rem}
+      .yt-revenue-calculator #tabs{display:flex;flex-direction:row;align-items:center;justify-content:space-around;font-size:1.2rem;list-style:none;margin-bottom:0}
+      .yt-revenue-calculator .tabtoggle{display:flex}
+      .yt-revenue-calculator .tabtoggle input[type='radio']{display:none}
+      .yt-revenue-calculator .tabtoggle input[type='radio']:checked + label{background-color:#fff}
+      .yt-revenue-calculator .tabtoggle label{padding:1rem 2rem;border:1px solid #C0BB9C;border-bottom:none;border-radius:.5rem .5rem 0 0;background-color:#fbfbf5}
+      .yt-revenue-calculator .tabtoggle label:hover{background-color:#fff}
+      .yt-revenue-calculator .tabcontent{display:none}
+      .yt-revenue-calculator .tabcontent[selected]{display:flex}
+      .yt-revenue-calculator .tabcontent label{display:flex;flex-direction:column;color:#444;font-size:1rem;font-weight:600;line-height:1.2rem;text-transform:uppercase;padding:1.5rem 0}
+      .yt-revenue-calculator .tabcontent input{color:#444;font-size:1.125rem;font-weight:600;line-height:1.75rem;padding:.5rem}
+      .yt-revenue-calculator .tabcontent input[type="range"]{display:block;width:100%;height:25px;margin:5px 0;outline:none}
+      .yt-revenue-calculator .tabcontent input[type=range]::-webkit-slider-thumb{height:26px;width:15px;border-radius:3px;background:#009568;cursor:pointer;-webkit-appearance:none}
+      .yt-revenue-calculator .tabcontent input[type=text]{margin-top:5px}
+      .yt-revenue-calculator .card{display:flex;flex-direction:row;flex-wrap:wrap;background-color:#fff;padding:2rem 1rem;width:100%;border-radius:0 0 .5rem .5rem;border:1px solid #C0BB9C;border-top:none;box-shadow:0 10px 15px -3px rgba(0,0,0,0.1),0 4px 6px -2px rgba(0,0,0,0.05)}
+      .yt-revenue-calculator .card-heading{font-size:1.875rem;font-weight:600;line-height:2.25rem;width:100%}
+      .yt-revenue-calculator .group{flex:1 1 0;display:flex;flex-direction:column;padding:.5rem}
+      .yt-revenue-calculator .group:last-of-type{align-items:center;text-align:center}
+      .yt-revenue-calculator .big-value{display:block;font-size:1.5rem;font-weight:700;color:#009568;line-height:1.75rem;padding:1rem 0;border:1px solid transparent}
+      .yt-revenue-calculator #tabs{flex-direction:column;padding:0}
+      .yt-revenue-calculator .tabtoggle,.yt-revenue-calculator .tabtoggle label,.yt-revenue-calculator .tabcontent input{width:100%}
+      .yt-revenue-calculator .group{flex-basis:100%}
+      @media(min-width:720px) {
+        .yt-revenue-calculator #tabs{flex-direction:row}
+        .yt-revenue-calculator .group{flex-basis:0}
+      }
+    </style>
+  </head>
+
+  <body>
+<!-- START: Initial States for all Calculators -->
+    <amp-state id="channelState">
+      <script type="application/json">
+        {
+          "vidsPerWeek": 1,
+          "viewsPerVideo": 1000,
+          "cpm": 4.38
+        }
+      </script>
+    </amp-state>
+    <amp-state id="videoState">
+      <script type="application/json">
+        {
+          "views": 1000,
+          "cpm": 4.38
+        }
+      </script>
+    </amp-state>
+    <amp-state id="subscriberState">
+      <script type="application/json">
+        {
+          "subs": 1000,
+          "percentSubs": 20,
+          "cpm": 4.38
+        }
+      </script>
+    </amp-state>
+<!-- END: Initial States for all Calculators -->
+
+<!-- START: "Amp Bind Macros" aka Expressions aka Functions -->
+    <!-- Calculate Channel Revenues -->
+    <amp-bind-macro id="weeklyChannelRevenue" arguments="" expression="((channelState.vidsPerWeek * channelState.viewsPerVideo * channelState.cpm * 0.55) / 1000).toFixed(2)" />
+    <amp-bind-macro id="annualChannelRevenue" arguments="" expression="(weeklyChannelRevenue() * 52).toFixed(2)" />
+    <amp-bind-macro id="monthlyChannelRevenue" arguments="" expression="(annualChannelRevenue() / 12).toFixed(2)" />
+    <!-- Calculate Video Revenue -->
+    <amp-bind-macro id="totalVideoRevenue" arguments="" expression="((videoState.views * videoState.cpm * 0.55) / 1000).toFixed(2)" />
+    <!-- Calculate Sybscriber Revenue -->
+    <amp-bind-macro id="totalSubscriberRevenue" arguments="" expression="((subscriberState.subs * subscriberState.percentSubs * subscriberState.cpm * 0.55) / 100000).toFixed(2)" />
+
+<!-- END: "Amp Bind Macros" aka Expressions aka Functions -->
+
+
+<!-- START: Calculator Markup Wrapper -->
+    <div class="yt-revenue-calculator">
+<!-- START: Tabs & Labels -->
+      <amp-selector id="tabs" role="tablist" on="select:tabcontent.toggle(index=event.targetOption, value=true)" keyboard-select-mode="focus">
+        <li id="tabtoggle--channel" class="tabtoggle" role="tab" aria-controls="tabcontent--channel" option="0" selected>
+          <input type="radio" id="ytrc-tab--channel" name="selected-tab" value="channel" checked />
+          <label for="ytrc-tab--channel">Channel</label>
+        </li>
+        <li id="tabtoggle--video" class="tabtoggle" role="tab" aria-controls="tabcontent--video" option="1">
+          <input type="radio" id="ytrc-tab--video" name="selected-tab" value="video" />
+          <label for="ytrc-tab--video">Video</label>
+        </li>
+        <li id="tabtoggle--subscriber" class="tabtoggle" role="tab" aria-controls="tabcontent--subscriber" option="2">
+          <input type="radio" id="ytrc-tab--subscriber" name="selected-tab" value="subscriber" />
+          <label for="ytrc-tab--subscriber">Subscriber</label>
+        </li>
+      </amp-selector>
+<!-- END: Tabs & Labels -->
+
+<!-- START: Tab Content Areas -->
+      <amp-selector id="tabcontent">
+  <!-- START: Channel Tab Content Area -->
+        <div id="ytrc-tabcontent--channel" class="tabcontent" role='tabpanel' aria-labelledby="tabtoggle--channel" option selected>
+          <section class="card">
+            <h2 class="card-heading">Expected Channel Revenue</h2>
+            <div class="group">
+              <label>
+                <span>Videos per Week</span>
+                <input type="text" name="vids-per-week" [value]="channelState.vidsPerWeek" value="1"
+                on="input-throttled:AMP.setState({ channelState: { vidsPerWeek: event.value } })" />
+              </label>
+              <label>
+                <span>Avg views / video</span>
+                <input type="text" name="views-per-video" [value]="channelState.viewsPerVideo" value="1000"
+                on="input-throttled:AMP.setState({ channelState: { viewsPerVideo: event.value } })" />
+              </label>
+              <label>
+                <span> CPM: <span id="cpm-output--channel" [text]="'$' + (channelState.cpm*100/100).toFixed(2)">$4.38</span> </span>
+                <input
+                  type="range" name="cpm-range"
+                  min="0.5" max="100" step="0.01" [value]="channelState.cpm" value="4.38"
+                  on="input-throttled:AMP.setState({ channelState: { cpm: event.value } })"
+                />
+                <input
+                  type="number" name="cpm-number"
+                  min="0.5" max="100" step="0.01" [value]="channelState.cpm" value="4.38"
+                  on="input-throttled:AMP.setState({ channelState: { cpm: event.value } })"
+                />
+              </label>
+            </div>
+            <div class="group">
+              <label> Weekly Revenue: <span id="weekly-revenue--channel" class="big-value" [text]="'$' + weeklyChannelRevenue()">$2.41</span> </label>
+              <label> Monthly Revenue: <span id="monthly-revenue--channel" class="big-value" [text]="'$' + monthlyChannelRevenue()">$10.44</span> </label>
+              <label> Annual Revenue: <span id="annual-revenue--channel" class="big-value" [text]="'$' + annualChannelRevenue()">$125.32</span> </label>
+            </div>
+          </section>
+        </div>
+  <!-- END: Channel Tab Content Area -->
+
+  <!-- START: Video Tab Content Area -->
+        <div id="ytrc-tabcontent--video" class="tabcontent" role='tabpanel' aria-labelledby="tabtoggle--video" option>
+          <section class="card">
+            <h2 class="card-heading">Revenue Per Video</h2>
+            <div class="group">
+              <label>
+                <span>Views</span>
+                <input type="text" name="views" [value]="videoState.views" value="1000"
+                on="input-throttled:AMP.setState({ videoState: { views: event.value } })" />
+              </label>
+              <label>
+                <span> CPM: <span id="cpm-output--video" [text]="'$' + (videoState.cpm*100/100).toFixed(2)">$4.38</span> </span>
+                <input
+                  type="range" name="cpm-range"
+                  min="0.5" max="100" step="0.01" [value]="videoState.cpm" value="4.38"
+                  on="input-throttled:AMP.setState({ videoState: { cpm: event.value } })"
+                />
+                <input
+                  type="number" name="cpm-number"
+                  min="0.5" max="100" step="0.01" [value]="videoState.cpm" value="4.38"
+                  on="input-throttled:AMP.setState({ videoState: { cpm: event.value } })"
+                />
+              </label>
+            </div>
+            <div class="group">
+              <label>
+                Total Revenue: <span id="revenue--video" class="big-value" [text]="'$' + totalVideoRevenue()">$2.41</span>
+              </label>
+            </div>
+          </section>
+        </div>
+  <!-- END: Video Tab Content Area -->
+
+  <!-- START: Subscriber Tab Content Area -->
+        <div id="ytrc-tabcontent--subscriber" class="tabcontent" role='tabpanel' aria-labelledby="tabtoggle--subscriber" option>
+          <section class="card">
+            <h2 class="card-heading">Value of Subscribers (Per Video)</h2>
+            <div class="group">
+              <label>
+                <span>NUMBER OF SUBSCRIBERS</span>
+                <input type="text" name="subs" [value]="subscriberState.subs" value="1000"
+                on="input-throttled:AMP.setState({ subscriberState: { subs: event.value } })" />
+              </label>
+              <label>
+                <span>
+                  % OF SUBS WHO WATCH EACH VIDEO:
+                  <span id="percent-output--subscriber" [text]="subscriberState.percentSubs">20</span>
+                </span>
+                <input
+                  type="range" name="subs-percent"
+                  min="0.5" max="100" step="0.01"  [value]="subscriberState.percentSubs" value="20"
+                  on="input-throttled:AMP.setState({ subscriberState: { percentSubs: event.value } })"
+                />
+              </label>
+              <label>
+                <span> CPM: <span id="cpm-output--subscriber" [text]="'$' + (subscriberState.cpm*100/100).toFixed(2)">$4.38</span> </span>
+                <input
+                  type="range" name="cpm-range"
+                  min="0.5" max="100" step="0.01" [value]="subscriberState.cpm" value="4.38"
+                  on="input-throttled:AMP.setState({ subscriberState: { cpm: event.value } })"
+                />
+                <input
+                  type="number" name="cpm-number"
+                  min="0.5" max="100" step="0.01" [value]="subscriberState.cpm" value="4.38"
+                  on="input-throttled:AMP.setState({ subscriberState: { cpm: event.value } })"
+                />
+              </label>
+            </div>
+            <div class="group">
+              <label>
+                Revenue From Subs / Video:
+                <span id="revenue--subscriber" class="big-value" [text]="'$' + totalSubscriberRevenue()">$0.48</span>
+              </label>
+            </div>
+          </section>
+        </div>
+  <!-- END: Subscriber Tab Content Area -->
+      </div>
+    </amp-selector>
+<!-- END: Tab Content Areas -->
+    </div>
+<!-- END: Calculator Markup Wrapper -->
+  </body>
+</html>
